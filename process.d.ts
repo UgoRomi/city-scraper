@@ -4,5 +4,8 @@ declare namespace NodeJS {
     CSRF_TOKEN: string;
     EMAIL_FROM: string;
     EMAIL_TO: string;
+    MONGODB_URI: string;
+    MONGODB_DB: string;
+    MONGODB_COLLECTION: string;
   }
 }

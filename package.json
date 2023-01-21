@@ -7,6 +7,9 @@
   "scripts": {
     "start": "ts-node index.ts"
   },
+  "engines": {
+    "node": ">=18 <19"
+  },
   "keywords": [],
   "author": "Ugo Romi <ugo.romi@gmail.com>",
   "license": "ISC",
@@ -17,6 +20,7 @@
   },
   "dependencies": {
     "dotenv": "^16.0.3",
+    "mongodb": "^4.13.0",
     "postmark": "^3.0.15",
     "puppeteer": "^19.5.2"
   }

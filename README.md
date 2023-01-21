@@ -11,11 +11,15 @@ This project uses Typescript and Puppeteer to scrape data from a public call for
    - `CSRF_TOKEN`: The CSRF token required to access the web page
    - `EMAIL_FROM`: The email address that the data will be sent from
    - `EMAIL_TO`: The email address that the data will be sent to
+   - `MONGODB_URI`: The MongoDB connection string
+   - `MONGODB_DB`: The MongoDB database name
+   - `MONGODB_COLLECTION`: The MongoDB collection name
 4. Run the script: `pnpm start`
 
 ## Usage
 
 This project is intended to be run as a scheduled task (e.g. using a cron job) to automatically scrape the data and send it by email at regular intervals.
+It also stores the data in a MongoDB database to avoid sending duplicate emails.
 
 ## Note
 

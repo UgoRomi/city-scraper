@@ -1,6 +1,6 @@
-import puppeteer from 'puppeteer';
-import * as dotenv from 'dotenv';
-import { ServerClient } from 'postmark';
+import puppeteer from "puppeteer";
+import * as dotenv from "dotenv";
+import { ServerClient } from "postmark";
 
 function isLink(
   link: { href: string; title: string } | null
@@ -9,7 +9,7 @@ function isLink(
 }
 
 const createPlainTextEmail = (links: { href: string; title: string }[]) => {
-  let text = '';
+  let text = "";
   links.forEach(({ href, title }) => {
     text += `- ${title}: ${href}\n`;
   });
@@ -17,11 +17,11 @@ const createPlainTextEmail = (links: { href: string; title: string }[]) => {
 };
 
 const createHtmlEmail = (links: { href: string; title: string }[]) => {
-  let list = '<ul>';
+  let list = "<ul>";
   links.forEach(({ href, title }) => {
     list += `<li><a href="${href}">${title}</a></li>`;
   });
-  list += '</ul>';
+  list += "</ul>";
   return list;
 };
 
@@ -34,11 +34,11 @@ dotenv.config();
     `https://servizi.comune.siena.it/openweb/pratiche/registri.php?sezione=concorsi&CSRF=${process.env.CSRF_TOKEN}}`
   );
 
-  const filterButton = await page.waitForSelector('text/Bandi Attivi');
+  const filterButton = await page.waitForSelector("text/Bandi Attivi");
   if (filterButton) await filterButton.click();
 
   // Wait for suggest overlay to appear and click "show all results".
-  const tableSelector = '#table_delibere > li:not(.table-header)';
+  const tableSelector = "#table_delibere > li:not(.table-header)";
   await page.waitForSelector(tableSelector);
   const links: Array<{ href: string; title: string } | null> = [];
   // Extract the results from the page.
@@ -47,17 +47,17 @@ dotenv.config();
       ...(await page.evaluate((tableSelector) => {
         return [...document.querySelectorAll(tableSelector)]
           .filter((element) => {
-            const match = /infanzia|asilo|nido|educatrice/i;
-            return match.test(element.textContent || '');
+            const match = /infanzia|asilo|nido|educatrice|educatore/i;
+            return match.test(element.textContent || "");
           })
           .map((element) => {
-            const aTags = Array.from(element.querySelectorAll('a'));
+            const aTags = Array.from(element.querySelectorAll("a"));
             const aTag = aTags.filter(
-              (a) => a.textContent?.trim() === 'Dettagli bando'
+              (a) => a.textContent?.trim() === "Dettagli bando"
             )[0];
             return {
-              href: aTag.getAttribute('href') || '',
-              title: element.textContent || 'Bando senza titolo',
+              href: aTag.getAttribute("href") || "",
+              title: element.textContent || "Bando senza titolo",
             };
           });
       }, tableSelector))
@@ -75,19 +75,19 @@ dotenv.config();
     const result = await client.sendEmail({
       From: process.env.EMAIL_FROM as string,
       To: process.env.EMAIL_TO as string,
-      Subject: 'Nuovi bandi di concorso',
+      Subject: "Nuovi bandi di concorso",
       HtmlBody:
-        '<h1>Ecco i nuovi bandi di concorso</h1>\n' +
+        "<h1>Ecco i nuovi bandi di concorso</h1>\n" +
         createHtmlEmail(workingLinks),
       TextBody:
-        'Ecco i nuovi bandi di concorso \n' +
+        "Ecco i nuovi bandi di concorso \n" +
         createPlainTextEmail(workingLinks),
-      MessageStream: 'outbound',
+      MessageStream: "outbound",
     });
     if (result.ErrorCode) {
       console.error(result);
     } else {
-      console.log('Email sent');
+      console.log("Email sent");
     }
   }
 

@@ -22,6 +22,6 @@
     "dotenv": "^16.0.3",
     "mongodb": "^4.13.0",
     "postmark": "^3.0.15",
-    "puppeteer": "^19.5.2"
+    "puppeteer": "^18"
   }
 }
